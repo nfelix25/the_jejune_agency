@@ -28,3 +28,10 @@
 #
 # Check it worked: after the package.json files exist, `pnpm ls -r --depth -1`
 # from the root should list the root package plus all three workspace packages.
+packages:
+  - "apps/*"
+  - "packages/*"
+
+onlyBuiltDependencies:
+  - better-sqlite3
+  - esbuild

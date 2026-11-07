@@ -1,42 +1,18 @@
-// ROOT package.json: the workspace "orchestrator". It isn't an app itself.
-//
-// ⚠️  JSON doesn't allow comments. Delete ALL of these lines once you've
-//     written the real content, or pnpm won't parse the file.
-//
-// Fields to write:
-//
-//   "name"            Any name, e.g. "the-jejune-agency". It's never published.
-//
-//   "private": true   REQUIRED at the root of a workspace. It stops anyone from
-//                     accidentally running `npm publish` on the whole monorepo.
-//
-//   "packageManager"  "pnpm@<version>". Pins the pnpm version so Corepack (which
-//                     ships with Node) and CI use the same one. Your installed
-//                     version is 10.19.0 (`pnpm -v`).
-//
-//   "engines"         { "node": ">=<major>" }. Documents the minimum Node
-//                     version. You're on Node 24.
-//
-//   "type": "module"  Makes .js files in the root (e.g. future config files) ESM.
-//
-//   "scripts"         Root scripts fan out to the packages. Key flags:
-//                       -r / --recursive   run in every workspace package that
-//                                          has that script, in dependency order
-//                                          (shared before web/server)
-//                       --parallel         run all at once and ignore order.
-//                                          Use it for long-running `dev` watchers.
-//                       --filter <name>    run in one package only
-//                     Scripts you'll want:
-//                       dev        → recursive + parallel "dev"
-//                       build      → recursive "build"
-//                       typecheck  → recursive "typecheck"
-//                       test       → recursive "test"
-//
-//   "devDependencies" Only tools shared by the whole repo (typescript for now;
-//                     vitest later). Don't type these in by hand. Run:
-//                       pnpm add -D -w typescript
-//                     `-w` (--workspace-root) is required to install at the root.
-//                     Without it, pnpm refuses, so you don't add root deps
-//                     by accident.
-//
-// Don't put React, Fastify, etc. here. Those go in the package that uses them.
+{
+  "name": "the-jejune-agency",
+  "private": true,
+  "packageManager": "pnpm@10.33.3",
+  "engines": {
+    "node": ">=24"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

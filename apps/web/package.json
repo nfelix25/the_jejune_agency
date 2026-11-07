@@ -1,29 +1,15 @@
-// apps/web/package.json: the React + Vite frontend.
-//
-// ⚠️  Delete all comments when done (JSON doesn't allow comments).
-//
-// Fields to write:
-//
-//   "name"          e.g. "@jejune/web"
-//   "version"       "0.0.0"
-//   "private": true
-//   "type": "module"   Vite expects ESM (vite.config.ts etc.).
-//
-//   "scripts"
-//     "dev"        vite             (dev server with hot reload)
-//     "build"      vite build       (outputs dist/; the server can serve this later)
-//     "preview"    vite preview
-//     "typecheck"  tsc with the no-emit flag. Vite only strips types and never
-//                  checks them, so this script is the only thing that catches
-//                  type errors in web.
-//
-//   "dependencies"
-//     The link to shared, same as the server:
-//       pnpm --filter @jejune/web add @jejune/shared@workspace:*
-//
-// Later in Milestone 0 ("React shell" step, not part of this scaffold):
-//   react, react-dom, @vitejs/plugin-react, vite, @types/react, @types/react-dom,
-//   then Tailwind + shadcn/ui, TanStack Query, a router.
-//   Tip: you can scaffold with `pnpm create vite`, but run it in a scratch
-//   folder and copy pieces over. Otherwise it overwrites this package.json
-//   and tsconfig.
+{
+  "name": "@jejune/web",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@jejune/shared": "workspace:*"
+  }
+}
