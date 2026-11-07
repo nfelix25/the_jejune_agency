@@ -1,0 +1,19 @@
+// apps/web/tsconfig.json
+//
+//   "extends"   relative path to the root tsconfig.base.json
+//
+//   "compilerOptions":
+//     "lib": ["ES2022", "DOM", "DOM.Iterable"]   browser globals (window, fetch,
+//                                                 EventSource for SSE, etc.)
+//     "jsx": "react-jsx"     The modern JSX transform, so there's no
+//                            `import React` in every file.
+//     "types": ["vite/client"]   Types for import.meta.env and asset imports
+//                                (these only resolve once vite is installed,
+//                                so add this in the React shell step).
+//
+//   "include"   the src folder
+//
+// No Node types here, on purpose: browser code shouldn't type-check if it
+// touches `fs` or `process`.
+// (Vite's own vite.config.ts runs in Node. When you add it, Vite's template
+// handles that with a separate tsconfig.node.json. Deal with it then.)

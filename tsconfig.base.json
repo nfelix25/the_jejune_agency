@@ -1,0 +1,33 @@
+// tsconfig.base.json: TypeScript settings shared by every package.
+//
+// Each package's tsconfig.json will `"extends": "../../tsconfig.base.json"`
+// and add only what's specific to it. (tsconfig files are JSONC, so these
+// comments can stay.)
+//
+// Write a single "compilerOptions" object. Recommended options and why:
+//
+//   "target": "ES2022"            Modern syntax. Node 24 and current browsers
+//                                 support it natively.
+//   "module": "Preserve"          Keeps import/export as written. Pair it with
+//   "moduleResolution": "Bundler" this resolution mode. Both fit because
+//                                 nothing here is compiled by tsc for running:
+//                                 Vite builds web, tsx runs server. Bundler
+//                                 resolution also means you DON'T need ".js"
+//                                 on relative imports (NodeNext requires it).
+//   "strict": true                Non-negotiable.
+//   "noUncheckedIndexedAccess": true  arr[i] / record[key] are typed `T | undefined`.
+//                                 This catches real bugs.
+//   "verbatimModuleSyntax": true  Forces `import type` for type-only imports,
+//                                 so the shared package's types never pull
+//                                 runtime code into the wrong bundle.
+//   "isolatedModules": true       Required by Vite/esbuild: each file must
+//                                 compile on its own.
+//   "noEmit": true                tsc is only the type checker here.
+//                                 Vite and tsx do the actual compiling.
+//   "skipLibCheck": true          Don't type-check node_modules .d.ts files.
+//                                 This is faster and avoids noise from libraries.
+//   "resolveJsonModule": true     Allows `import x from "./file.json"`.
+//   "esModuleInterop": true       Smooth default-imports from CommonJS libraries.
+//
+// Leave out "include", "lib", "jsx", and "types". Those differ per package
+// (browser vs Node), so each package's own tsconfig sets them.

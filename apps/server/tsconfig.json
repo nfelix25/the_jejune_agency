@@ -1,0 +1,15 @@
+// apps/server/tsconfig.json
+//
+//   "extends"   relative path to the root tsconfig.base.json
+//
+//   "compilerOptions":
+//     "lib": ["ES2022"]    No "DOM". This code runs in Node, not a browser.
+//     "types": ["node"]    Loads @types/node, so `process`, `fs`, `path`
+//                          etc. type-check. (Once "types" is set, ONLY the
+//                          listed @types packages load automatically.)
+//
+//   "include"   the src folder
+//
+// You don't need "paths" or "references" to reach @jejune/shared. It resolves
+// through node_modules (the workspace symlink) and its package.json "exports",
+// the same way any npm package does.

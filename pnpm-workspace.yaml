@@ -1,0 +1,30 @@
+# pnpm-workspace.yaml: the file that turns this repo into a workspace
+#
+# When this file is at the repo root, pnpm treats the repo as a workspace and
+# uses it to find the member packages. (YAML allows comments, so you can keep these.)
+#
+# ── 1. `packages:` (required) ──────────────────────────────────────────────
+# A list of glob patterns. Any matching folder that contains a package.json
+# becomes a workspace package. You need two patterns: one for everything under
+# apps/ and one for everything under packages/.
+#
+#   packages:
+#     - "<glob for apps>"
+#     - "<glob for packages>"
+#
+# ── 2. `onlyBuiltDependencies:` (you'll need this in Milestone 0) ───────────
+# Since pnpm 10, dependencies' install scripts (postinstall etc.) are BLOCKED
+# by default, for supply-chain safety. Native modules that compile or download
+# a binary during install will be skipped and then fail at runtime.
+# This repo will hit that with the SQLite driver (better-sqlite3) and esbuild
+# (used by Vite and tsx). Allow them by name:
+#
+#   onlyBuiltDependencies:
+#     - <package name>
+#     - <package name>
+#
+# If you forget, `pnpm install` prints a warning naming the blocked packages.
+# `pnpm approve-builds` can also write this list for you interactively.
+#
+# Check it worked: after the package.json files exist, `pnpm ls -r --depth -1`
+# from the root should list the root package plus all three workspace packages.

@@ -1,0 +1,34 @@
+// apps/server/package.json: the Fastify backend.
+//
+// ⚠️  Delete all comments when done (JSON doesn't allow comments).
+//
+// Fields to write:
+//
+//   "name"          e.g. "@jejune/server" (same scope as shared)
+//   "version"       "0.0.0"
+//   "private": true
+//   "type": "module"   Native ESM in Node.
+//
+//   "scripts"
+//     "dev"        tsx in watch mode on your entry file (e.g. src/main.ts).
+//                  tsx runs TypeScript directly in Node and restarts on change.
+//                  It also compiles @jejune/shared's .ts source.
+//     "typecheck"  tsc with the no-emit flag
+//     "start"      plain tsx on the entry file is fine for a localhost-only
+//                  app. You can add a real bundled build step later if you
+//                  need one (PLAN §15 "decisions to postpone").
+//
+//   "dependencies"
+//     The link to shared. Add it with the CLI so the protocol is right:
+//       pnpm --filter @jejune/server add @jejune/shared@workspace:*
+//     This writes  "@jejune/shared": "workspace:*". The `workspace:`
+//     protocol means "always use the local package, never the registry", and
+//     pnpm symlinks node_modules/@jejune/shared → packages/shared.
+//
+//   "devDependencies"
+//     tsx and @types/node:
+//       pnpm --filter @jejune/server add -D tsx @types/node
+//     (typescript is installed at the root, so you don't need it here.)
+//
+// Later in Milestone 0 (not part of the workspace scaffold): fastify, zod,
+// drizzle-orm + better-sqlite3 (+ drizzle-kit as a dev dep), pino.

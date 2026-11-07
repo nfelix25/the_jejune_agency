@@ -1,0 +1,32 @@
+// packages/shared/package.json: the contracts package that web and server import.
+//
+// ⚠️  Delete all comments when done (JSON doesn't allow comments).
+//
+// Fields to write:
+//
+//   "name"     A scoped name, e.g. "@jejune/shared". This name (NOT the folder
+//              path) is what other packages put in their dependencies and
+//              what you write in `import ... from "<name>"`.
+//              The scope ("@jejune") is your choice. Keep it the same across
+//              all three packages.
+//
+//   "version"  Anything, e.g. "0.0.0". It's never published.
+//   "private": true
+//   "type": "module"
+//
+//   "exports"  The package's public entry point. Point "." straight at the
+//              TypeScript source file (./src/index.ts), NOT a built .js file.
+//              This is the "no build step" approach: Vite (web) and tsx
+//              (server) both compile .ts files from workspace packages
+//              themselves, so edits to shared take effect immediately.
+//              Shape:  "exports": { ".": "<path to src/index.ts>" }
+//              (Later, you can add subpaths like "./schemas" if one barrel gets big.)
+//
+//   "scripts"  "typecheck": tsc with the no-emit flag, using this package's tsconfig.
+//              (No "build" or "dev" scripts. There's nothing to build.)
+//
+//   "dependencies"   zod. Install with:
+//                      pnpm --filter @jejune/shared add zod
+//                    Keep this package dependency-light. It runs in both the
+//                    browser and Node, so nothing Node-only (fs, sqlite) and
+//                    nothing browser-only (react) can go here.

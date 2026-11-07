@@ -1,0 +1,14 @@
+# .gitignore: one pattern per line. A pattern with no leading slash matches
+# at any depth, so it covers every package.
+#
+# Add patterns for:
+#   - installed dependencies (the folder pnpm creates in the root AND in each package)
+#   - build output folders (Vite emits `dist`)
+#   - the SQLite database file(s), incl. the -wal / -shm sidecar files SQLite
+#     creates in WAL mode (a glob like `*.db*` or `*.sqlite*` covers them)
+#   - local env/secrets files (.env, .env.local), since the OpenAI key will
+#     live there (see PLAN §3.2)
+#   - OS/editor junk (.DS_Store on macOS)
+#   - Playwright output (test-results/, playwright-report/) for later
+#
+# Do NOT ignore pnpm-lock.yaml. Commit it so installs are reproducible.

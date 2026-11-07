@@ -1,0 +1,12 @@
+// packages/shared/tsconfig.json
+//
+//   "extends"   relative path to the root tsconfig.base.json
+//
+//   "compilerOptions":
+//     "lib": ["ES2022"]   Language built-ins ONLY: no "DOM", and no Node types.
+//                         Leaving those out is deliberate. If shared code
+//                         accidentally uses `window` or `process`, the type
+//                         checker will catch it, because this code has to
+//                         run in both environments.
+//
+//   "include"   the src folder
