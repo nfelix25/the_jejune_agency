@@ -1,14 +1,50 @@
-# .gitignore: one pattern per line. A pattern with no leading slash matches
-# at any depth, so it covers every package.
-#
-# Add patterns for:
-#   - installed dependencies (the folder pnpm creates in the root AND in each package)
-#   - build output folders (Vite emits `dist`)
-#   - the SQLite database file(s), incl. the -wal / -shm sidecar files SQLite
-#     creates in WAL mode (a glob like `*.db*` or `*.sqlite*` covers them)
-#   - local env/secrets files (.env, .env.local), since the OpenAI key will
-#     live there (see PLAN §3.2)
-#   - OS/editor junk (.DS_Store on macOS)
-#   - Playwright output (test-results/, playwright-report/) for later
-#
-# Do NOT ignore pnpm-lock.yaml. Commit it so installs are reproducible.
+# ── Dependencies ────────────────────────────────────────────────────────────
+# pnpm creates node_modules in the root (the real store links) AND in each
+# package (symlinks such as apps/server/node_modules/@jejune/shared).
+# This one pattern covers all of them.
+node_modules/
+
+# ── Build output ────────────────────────────────────────────────────────────
+# `vite build` writes apps/web/dist. Any future server bundle would land in a
+# dist/ folder too. These are always regenerated, so never commit them.
+dist/
+# TypeScript's incremental-build cache (only appears if "incremental" or
+# project references get turned on later).
+*.tsbuildinfo
+
+# ── Local data (SQLite) ─────────────────────────────────────────────────────
+# The app's database holds YOUR projects, conversations, and tasks. It's user
+# data, not source code. In WAL mode SQLite also writes "-wal" and "-shm"
+# sidecar files next to the main file. The trailing "*" catches those too
+# (app.db, app.db-wal, app.db-shm).
+*.db*
+*.sqlite*
+# NOTE: Drizzle *migrations* (generated .sql files) are source code and SHOULD
+# be committed. Those patterns don't match .sql, so they're safe.
+
+# ── Secrets / local config ──────────────────────────────────────────────────
+# .env files will hold the optional OpenAI API key (PLAN §3.2). Never commit them.
+# The negation lets you commit an example file listing the variable NAMES
+# (with no real values) as documentation.
+.env
+.env.*
+!.env.example
+
+# ── Logs ────────────────────────────────────────────────────────────────────
+# Pino logs written to disk, plus the debug logs pnpm writes when an install fails.
+*.log
+logs/
+
+# ── Test output (Playwright, Vitest coverage) ───────────────────────────────
+test-results/
+playwright-report/
+playwright/.cache/
+coverage/
+
+# ── OS / editor ─────────────────────────────────────────────────────────────
+# macOS writes .DS_Store in every folder you open in Finder.
+.DS_Store
+# Editor settings are personal. If you later want to share specific files
+# (e.g. .vscode/extensions.json), re-include them with "!".
+.vscode/
+.idea/
