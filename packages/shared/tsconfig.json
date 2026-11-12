@@ -1,12 +1,20 @@
 // packages/shared/tsconfig.json
 //
-//   "extends"   relative path to the root tsconfig.base.json
-//
-//   "compilerOptions":
-//     "lib": ["ES2022"]   Language built-ins ONLY: no "DOM", and no Node types.
-//                         Leaving those out is deliberate. If shared code
-//                         accidentally uses `window` or `process`, the type
-//                         checker will catch it, because this code has to
-//                         run in both environments.
-//
-//   "include"   the src folder
+// Shared code runs in BOTH the browser (web) and Node (server). So this
+// config deliberately gives it access to neither environment's globals. If
+// a shared file touches `window`, `document`, `process`, or `Buffer`, the
+// type check fails here, before it can break one of the two consumers.
+{
+  // Inherit everything from the root. The path is relative to THIS file.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Only JavaScript language built-ins (Promise, Map, Array.prototype.at...).
+    // No "DOM" means no browser globals.
+    "lib": ["ES2022"],
+    // No @types packages load. Since TS 6, `types` already defaults to [],
+    // but writing it out documents that Node types are excluded on purpose.
+    "types": []
+  },
+  // Which files tsc checks. Everything outside src/ (like this config) is ignored.
+  "include": ["src"]
+}

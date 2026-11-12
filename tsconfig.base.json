@@ -1,33 +1,75 @@
 // tsconfig.base.json: TypeScript settings shared by every package.
 //
-// Each package's tsconfig.json will `"extends": "../../tsconfig.base.json"`
-// and add only what's specific to it. (tsconfig files are JSONC, so these
-// comments can stay.)
+// This file is never run directly. Each package's tsconfig.json "extends" it
+// and adds only what's specific to that package (lib, types, jsx, include).
+// tsconfig files are JSONC, so comments like these are allowed.
 //
-// Write a single "compilerOptions" object. Recommended options and why:
-//
-//   "target": "ES2022"            Modern syntax. Node 24 and current browsers
-//                                 support it natively.
-//   "module": "Preserve"          Keeps import/export as written. Pair it with
-//   "moduleResolution": "Bundler" this resolution mode. Both fit because
-//                                 nothing here is compiled by tsc for running:
-//                                 Vite builds web, tsx runs server. Bundler
-//                                 resolution also means you DON'T need ".js"
-//                                 on relative imports (NodeNext requires it).
-//   "strict": true                Non-negotiable.
-//   "noUncheckedIndexedAccess": true  arr[i] / record[key] are typed `T | undefined`.
-//                                 This catches real bugs.
-//   "verbatimModuleSyntax": true  Forces `import type` for type-only imports,
-//                                 so the shared package's types never pull
-//                                 runtime code into the wrong bundle.
-//   "isolatedModules": true       Required by Vite/esbuild: each file must
-//                                 compile on its own.
-//   "noEmit": true                tsc is only the type checker here.
-//                                 Vite and tsx do the actual compiling.
-//   "skipLibCheck": true          Don't type-check node_modules .d.ts files.
-//                                 This is faster and avoids noise from libraries.
-//   "resolveJsonModule": true     Allows `import x from "./file.json"`.
-//   "esModuleInterop": true       Smooth default-imports from CommonJS libraries.
-//
-// Leave out "include", "lib", "jsx", and "types". Those differ per package
-// (browser vs Node), so each package's own tsconfig sets them.
+// Paths in "extends" and "include" resolve relative to the file that
+// declares them. That's why "include" isn't set here: it would point at the
+// root, not at each package.
+{
+  "compilerOptions": {
+    // ── Output language ────────────────────────────────────────────────────
+    // Which JS syntax version TypeScript checks against and would emit.
+    // Node 24 and current browsers support ES2022 natively (top-level await,
+    // class fields, .at(), Object.hasOwn).
+    "target": "ES2022",
+
+    // ── Modules ────────────────────────────────────────────────────────────
+    // "Preserve" leaves import/export statements exactly as written.
+    // TypeScript never rewrites them, because it never produces runnable output
+    // here: Vite compiles web, and tsx compiles server at runtime.
+    "module": "Preserve",
+    // "Bundler" resolves imports the way Vite/esbuild/tsx do:
+    //   - It honors package.json "exports" (that's how @jejune/shared → src/index.ts works).
+    //   - Relative imports don't need a ".js" extension. (With "NodeNext"
+    //     resolution you'd have to write "./foo.js" even for a .ts file.)
+    "moduleResolution": "Bundler",
+    // Allows `import config from "./x.json"` with typed contents.
+    "resolveJsonModule": true,
+
+    // ── Type-checking strictness ───────────────────────────────────────────
+    // Turns on the whole strict family (strictNullChecks, noImplicitAny, ...).
+    // It's the default since TS 6, but stating it makes the intent explicit.
+    "strict": true,
+    // arr[i] and record[key] get the type `T | undefined` instead of `T`.
+    // That forces you to handle "not found", which is a common real bug in
+    // lookup-heavy code like task/candidate maps.
+    "noUncheckedIndexedAccess": true,
+    // Optional properties (`foo?: string`) can't be explicitly set to
+    // `undefined` unless the type says so. This matches how Zod's .optional()
+    // output behaves.
+    "exactOptionalPropertyTypes": true,
+    // These catch dead code and silent fallthrough in switch statements over
+    // lifecycle states (PLAN §7.1).
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+
+    // ── Compatibility with single-file compilers ───────────────────────────
+    // Vite, esbuild, and tsx compile ONE file at a time with no type info.
+    // These two settings make tsc reject code those tools would mis-compile:
+    //   isolatedModules:      each file must be compilable on its own
+    //                         (e.g. no re-exporting a type without `export type`).
+    //   verbatimModuleSyntax: imports used only as types must be written
+    //                         `import type { X }`. Type imports are erased, and
+    //                         everything else stays as a real runtime import, so
+    //                         it's always obvious which imports actually load code.
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    // ── tsc's job here: checking only ──────────────────────────────────────
+    // tsc never writes .js files in this repo. `pnpm typecheck` just reports errors.
+    "noEmit": true,
+    // Skip type-checking library .d.ts files in node_modules. This is much
+    // faster, and errors inside libraries aren't yours to fix anyway.
+    "skipLibCheck": true,
+    // Prevents "works on macOS, breaks on Linux" import-casing bugs
+    // (import "./Foo" when the file is foo.ts).
+    "forceConsistentCasingInFileNames": true,
+
+    // Not set, on purpose:
+    //   esModuleInterop: always on since TS 6 (it can't be turned off).
+    //   lib / types / jsx: they differ per environment (browser vs Node),
+    //                      so each package sets its own.
+  },
+}

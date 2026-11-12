@@ -1,19 +1,32 @@
 // apps/web/tsconfig.json
 //
-//   "extends"   relative path to the root tsconfig.base.json
-//
-//   "compilerOptions":
-//     "lib": ["ES2022", "DOM", "DOM.Iterable"]   browser globals (window, fetch,
-//                                                 EventSource for SSE, etc.)
-//     "jsx": "react-jsx"     The modern JSX transform, so there's no
-//                            `import React` in every file.
-//     "types": ["vite/client"]   Types for import.meta.env and asset imports
-//                                (these only resolve once vite is installed,
-//                                so add this in the React shell step).
-//
-//   "include"   the src folder
-//
-// No Node types here, on purpose: browser code shouldn't type-check if it
-// touches `fs` or `process`.
-// (Vite's own vite.config.ts runs in Node. When you add it, Vite's template
-// handles that with a separate tsconfig.node.json. Deal with it then.)
+// The React app runs in the browser, so it gets DOM types and no Node types.
+// If browser code touches `fs` or `process`, the type check fails, which is
+// what you want: those don't exist in the browser.
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // ES2022 built-ins plus browser APIs:
+    //   DOM:          window, document, fetch, EventSource (SSE, PLAN §9.3)
+    //   DOM.Iterable: for...of over NodeList, Headers, FormData, etc.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // How TSX is type-checked. "react-jsx" is React 17+'s automatic runtime:
+    // JSX compiles to calls imported from react/jsx-runtime, so you never
+    // need `import React from "react"` at the top of each component.
+    // (Vite's React plugin does the actual compile. This setting just keeps
+    // tsc in agreement with it.)
+    "jsx": "react-jsx",
+
+    // Ambient types to load. Empty for now, because Vite isn't installed yet.
+    // In the React shell step, change this to ["vite/client"]. That adds types
+    // for `import.meta.env.VITE_*` and for importing assets
+    // (`import logo from "./logo.svg"` → string).
+    "types": []
+  },
+  "include": ["src"]
+
+  // Later: vite.config.ts runs in NODE, not the browser, so it can't share
+  // this config's lib/types. The usual fix (and what `pnpm create vite`
+  // generates) is a separate tsconfig.node.json that covers just that file.
+}

@@ -1,15 +1,21 @@
 // apps/server/tsconfig.json
 //
-//   "extends"   relative path to the root tsconfig.base.json
+// The Fastify server runs in Node, so it gets Node's types and no browser types.
 //
-//   "compilerOptions":
-//     "lib": ["ES2022"]    No "DOM". This code runs in Node, not a browser.
-//     "types": ["node"]    Loads @types/node, so `process`, `fs`, `path`
-//                          etc. type-check. (Once "types" is set, ONLY the
-//                          listed @types packages load automatically.)
-//
-//   "include"   the src folder
-//
-// You don't need "paths" or "references" to reach @jejune/shared. It resolves
-// through node_modules (the workspace symlink) and its package.json "exports",
-// the same way any npm package does.
+// You don't need "paths" or "references" to reach @jejune/shared. That import
+// resolves like any npm package: through node_modules/@jejune/shared (the
+// workspace symlink) and the "exports" field in its package.json. tsc
+// follows the symlink and type-checks the shared .ts source along the way.
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Language built-ins only. No "DOM", so `window`/`document` are errors here.
+    "lib": ["ES2022"],
+    // Load @types/node (installed in this package's devDependencies) so
+    // `process`, `node:fs`, `node:path`, `Buffer`, etc. are typed.
+    // Since TS 6, NO @types packages load unless they're listed here, so
+    // add any future ones (none expected; most libraries ship their own types).
+    "types": ["node"]
+  },
+  "include": ["src"]
+}
