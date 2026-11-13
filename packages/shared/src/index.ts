@@ -13,3 +13,6 @@
 // Reminder: with verbatimModuleSyntax on, consumers import types using
 //   import type { Project } from "@jejune/shared";
 // and import runtime values (Zod schemas) with a normal import.
+
+export type Probe = "VALUE";
+export const PROBE = "VALUE";

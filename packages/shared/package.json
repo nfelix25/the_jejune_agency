@@ -1,17 +1,17 @@
 {
-  "name": "@jejune/shared",
-  "version": "0.0.1",
-  "type": "module",
-  "private": true,
-  "exports": {
-    ".": {
-      "import": "./src/index.ts"
+    "name": "@jejune/shared",
+    "version": "0.0.1",
+    "type": "module",
+    "private": true,
+    "exports": {
+        ".": {
+            "import": "./src/index.ts"
+        }
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "zod": "^4.6.7"
     }
-  },
-  "scripts": {
-    "typecheck": "tsc"
-  },
-  "dependencies": {
-    "zod": "^4.6.7"
-  }
 }
